@@ -1,0 +1,9 @@
+.DS_Store
+.playwright-cli/
+.vscode/
+node_modules/
+*.zip
+
+android/.gradle/
+android/build/
+android/app/build/

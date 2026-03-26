@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="오늘 해야 할 일을 빠르게 적고 완료 체크까지 할 수 있는 설치형 미니 투두 앱"
+    />
+    <meta name="theme-color" content="#ef6c42" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="오늘의 할 일" />
+    <title>오늘의 할 일 — 미니 투두 앱</title>
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="icon" href="./icon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="noise" aria-hidden="true"></div>
+    <main class="app-shell">
+      <section class="hero-card">
+        <p class="eyebrow">MONDAY MODE</p>
+        <div class="hero-copy">
+          <h1>오늘의 할 일</h1>
+          <p>
+            지금 떠오른 일을 바로 적고, 끝난 일은 가볍게 체크하세요.
+            복잡한 기능 없이 오늘 해야 할 일만 또렷하게 보여줍니다.
+          </p>
+        </div>
+
+        <div class="meta-grid" aria-label="오늘의 상태">
+          <article class="meta-card">
+            <span class="meta-label">남은 일</span>
+            <strong id="remainingCount">0</strong>
+          </article>
+          <article class="meta-card">
+            <span class="meta-label">완료한 일</span>
+            <strong id="completedCount">0</strong>
+          </article>
+          <article class="meta-card meta-card-accent">
+            <span class="meta-label">오늘의 메시지</span>
+            <strong id="focusMessage">가볍게 하나부터 시작해요.</strong>
+          </article>
+        </div>
+      </section>
+
+      <section class="todo-card" aria-labelledby="todoSectionTitle">
+        <div class="todo-head">
+          <div>
+            <p class="section-kicker">TODAY LIST</p>
+            <h2 id="todoSectionTitle">오늘의 체크리스트</h2>
+          </div>
+          <div class="todo-actions">
+            <p class="date-chip" id="todayLabel"></p>
+            <button id="installButton" class="install-button" type="button" hidden>
+              앱으로 설치
+            </button>
+          </div>
+        </div>
+
+        <form id="todoForm" class="todo-form">
+          <label class="sr-only" for="todoInput">할 일 입력</label>
+          <input
+            id="todoInput"
+            name="todo"
+            type="text"
+            maxlength="80"
+            placeholder="예: 기획서 검토하기"
+            autocomplete="off"
+          />
+          <button type="submit">추가</button>
+        </form>
+        <p id="formMessage" class="form-message" aria-live="polite"></p>
+        <p id="installNote" class="install-note" aria-live="polite"></p>
+
+        <ul id="todoList" class="todo-list" aria-live="polite"></ul>
+
+        <div id="emptyState" class="empty-state">
+          <p class="empty-title">아직 등록된 할 일이 없어요.</p>
+          <p class="empty-copy">가장 먼저 끝낼 작은 일을 하나 적어보세요.</p>
+        </div>
+      </section>
+    </main>
+
+    <script src="./script.js"></script>
+  </body>
+</html>

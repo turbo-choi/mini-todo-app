@@ -1,0 +1,9 @@
+{
+  "appId": "com.turbo.minitodo",
+  "appName": "미니 할 일 앱",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "android": {
+    "backgroundColor": "#f5efe4"
+  }
+}
