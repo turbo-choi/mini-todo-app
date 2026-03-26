@@ -72,8 +72,6 @@ function setupInstallPrompt() {
     return;
   }
 
-  setInstallNote("지원되는 브라우저에서는 설치 버튼이 자동으로 나타납니다.");
-
   window.addEventListener("beforeinstallprompt", (event) => {
     event.preventDefault();
     state.deferredInstallPrompt = event;
@@ -82,6 +80,7 @@ function setupInstallPrompt() {
   });
 
   window.addEventListener("appinstalled", () => {
+    ㅔ
     state.deferredInstallPrompt = null;
     elements.installButton.hidden = true;
     setInstallNote("앱 설치가 완료됐어요.");
