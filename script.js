@@ -5,11 +5,14 @@ const STORAGE_ERROR_MESSAGE =
 const state = {
   todos: loadTodos(),
   deferredInstallPrompt: null,
+  editingId: null,
 };
 
 const elements = {
   form: document.querySelector("#todoForm"),
   input: document.querySelector("#todoInput"),
+  submitButton: document.querySelector("#submitButton"),
+  cancelEditButton: document.querySelector("#cancelEditButton"),
   list: document.querySelector("#todoList"),
   emptyState: document.querySelector("#emptyState"),
   formMessage: document.querySelector("#formMessage"),
@@ -25,6 +28,7 @@ initialize();
 
 function initialize() {
   renderDate();
+  syncFormMode();
   render();
   setupInstallPrompt();
   registerServiceWorker();
@@ -40,16 +44,28 @@ function initialize() {
       return;
     }
 
-    state.todos.unshift({
-      id: crypto.randomUUID(),
-      text: value,
-      completed: false,
-    });
+    if (state.editingId) {
+      updateTodo(state.editingId, value);
+      setMessage("할 일을 수정했어요.");
+    } else {
+      state.todos.unshift({
+        id: crypto.randomUUID(),
+        text: value,
+        completed: false,
+      });
+      setMessage("할 일이 추가됐어요.");
+    }
 
-    elements.form.reset();
-    setMessage("할 일이 추가됐어요.");
     persistTodos();
+    resetForm();
     render();
+    elements.input.focus();
+  });
+
+  elements.cancelEditButton.addEventListener("click", () => {
+    resetForm();
+    render();
+    setMessage("수정을 취소했어요.");
     elements.input.focus();
   });
 }
@@ -101,7 +117,8 @@ function render() {
 
   state.todos.forEach((todo) => {
     const item = document.createElement("li");
-    item.className = `todo-item${todo.completed ? " completed" : ""}`;
+    item.className =
+      `todo-item${todo.completed ? " completed" : ""}${state.editingId === todo.id ? " editing" : ""}`;
 
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
@@ -114,7 +131,18 @@ function render() {
     text.className = "todo-text";
     text.textContent = todo.text;
 
-    item.append(checkbox, text);
+    const actions = document.createElement("div");
+    actions.className = "todo-item-actions";
+
+    const editButton = document.createElement("button");
+    editButton.type = "button";
+    editButton.className = "item-action-button";
+    editButton.textContent = state.editingId === todo.id ? "수정 중" : "수정";
+    editButton.setAttribute("aria-label", `${todo.text} 수정`);
+    editButton.addEventListener("click", () => startEdit(todo.id));
+
+    actions.append(editButton);
+    item.append(checkbox, text, actions);
     elements.list.append(item);
   });
 
@@ -143,6 +171,44 @@ function toggleTodo(id) {
 
 function setMessage(message) {
   elements.formMessage.textContent = message;
+}
+
+function startEdit(id) {
+  const target = state.todos.find((todo) => todo.id === id);
+
+  if (!target) {
+    return;
+  }
+
+  state.editingId = id;
+  elements.input.value = target.text;
+  syncFormMode();
+  render();
+  setMessage("입력창에서 내용을 수정한 뒤 저장해 주세요.");
+  elements.input.focus();
+  elements.input.setSelectionRange(target.text.length, target.text.length);
+}
+
+function updateTodo(id, nextText) {
+  state.todos = state.todos.map((todo) =>
+    todo.id === id ? { ...todo, text: nextText } : todo,
+  );
+}
+
+function resetForm() {
+  state.editingId = null;
+  elements.form.reset();
+  syncFormMode();
+}
+
+function syncFormMode() {
+  const isEditing = Boolean(state.editingId);
+  elements.form.classList.toggle("is-editing", isEditing);
+  elements.submitButton.textContent = isEditing ? "저장" : "추가";
+  elements.cancelEditButton.hidden = !isEditing;
+  elements.input.placeholder = isEditing
+    ? "수정할 할 일을 입력하세요"
+    : "예: 기획서 검토하기";
 }
 
 function persistTodos() {

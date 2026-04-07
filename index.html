@@ -69,7 +69,12 @@
             placeholder="예: 기획서 검토하기"
             autocomplete="off"
           />
-          <button type="submit">추가</button>
+          <div class="form-action-group">
+            <button id="submitButton" type="submit">추가</button>
+            <button id="cancelEditButton" class="secondary-action" type="button" hidden>
+              취소
+            </button>
+          </div>
         </form>
         <p id="formMessage" class="form-message" aria-live="polite"></p>
         <p id="installNote" class="install-note" aria-live="polite"></p>
