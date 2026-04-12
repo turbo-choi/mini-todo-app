@@ -1,47 +1,61 @@
-# 미니 할 일 앱
+# mini_todo_flutter_app
 
-오늘 해야 할 일을 빠르게 추가하고 완료 여부를 체크하는 단일 페이지 웹앱입니다.
+작은 Todo 앱을 Flutter로 구현한 프로젝트입니다. Android를 우선 대상으로 두고 있으며, 같은 코드베이스로 iOS 실행도 가능하도록 기본 플랫폼 프로젝트가 포함되어 있습니다.
 
-## 파일 구성
-- `index.html`: 화면 구조
-- `styles.css`: 반응형 UI 스타일
-- `script.js`: 할 일 추가, 완료 토글, localStorage 저장 로직
+## 기능
 
-## 실행 방법
+- Todo 추가
+- Todo 완료/진행 중 토글
+- Todo 내용 수정
+- Todo 삭제
+- `shared_preferences` 기반 로컬 저장
+- 좁은 화면과 넓은 화면을 나누는 반응형 레이아웃
+- 한국어 앱 이름과 사용자 문구
 
-### 방법 1) 브라우저에서 바로 열기
-`index.html` 파일을 브라우저로 열면 됩니다.
+## 환경
 
-### 방법 2) 로컬 서버 실행
-```bash
-cd /path/to/mini-todo-app
-python3 -m http.server 8000
+- Flutter 3.41.6 stable
+- Dart 3.11.4
+- Android Gradle Plugin 8.11.1
+- Kotlin Android plugin 2.2.20
+
+`pubspec.yaml`은 Dart SDK `^3.11.4`를 요구합니다.
+
+## 실행
+
+```sh
+flutter pub get
+flutter run
 ```
 
-브라우저에서 `http://localhost:8000`으로 접속하세요.
+Android 디버그 APK 빌드:
 
-루트 웹 파일을 `www/`와 Android 프로젝트에 반영하려면 아래 명령으로 동기화하세요.
-
-```bash
-npm run cap:sync
+```sh
+flutter build apk --debug
 ```
 
-## 구현 기능
-- 할 일 추가
-- 빈 입력 방지
-- 오늘의 할 일 목록 표시
-- 완료 체크 토글
-- 완료된 항목 스타일 구분
-- 남은 일 / 완료한 일 개수 표시
-- localStorage 기반 새로고침 유지
-- 모바일/데스크톱 반응형 UI
-- PWA 지원(홈 화면 설치 / 앱처럼 실행 / 오프라인 캐시)
+빌드 결과물은 `build/app/outputs/flutter-apk/app-debug.apk`에 생성됩니다.
 
-## 앱처럼 설치하기
+## 검증
 
-이 프로젝트는 이제 설치 가능한 웹앱(PWA)입니다.
+```sh
+flutter analyze
+flutter test
+```
 
-- Chrome/Edge 계열: 주소창 또는 브라우저 메뉴의 **설치**
-- iPhone/iPad Safari: **공유 → 홈 화면에 추가**
+현재 위젯 테스트는 앱 셸 렌더링, Todo 추가와 저장, 선택 항목 수정, 완료 토글 저장, 삭제 저장을 확인합니다.
 
-> 참고: 설치와 오프라인 기능은 `file://`로 직접 열 때보다, 로컬 서버나 배포 URL에서 더 잘 동작합니다.
+## 구조
+
+- `lib/main.dart`: 앱 진입점, Todo 모델, 화면, 저장 로직
+- `test/widget_test.dart`: 사용자 흐름 중심 위젯 테스트
+- `android/`: Android 플랫폼 프로젝트
+- `ios/`: iOS 플랫폼 프로젝트
+
+## 배포 전 체크리스트
+
+- Android `applicationId`를 실제 배포용 패키지명으로 확정
+- Android release signing 설정
+- 앱 아이콘/스플래시 이미지 교체
+- iOS bundle identifier와 signing team 설정
+- 실제 기기에서 입력, 저장, 회전, 작은 화면 레이아웃 확인
